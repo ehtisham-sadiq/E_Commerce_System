@@ -1,0 +1,8 @@
+databases==0.9.0
+fastapi==0.112.2
+fastapi-mail==1.4.1
+pydantic==2.9.0
+SQLAlchemy==2.0.28
+sqlmodel==0.0.22
+uvicorn==0.32.0
+websockets==13.1
