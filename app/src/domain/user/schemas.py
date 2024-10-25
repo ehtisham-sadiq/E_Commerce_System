@@ -3,16 +3,18 @@ from typing import Optional
 
 class UserCreate(BaseModel):
     username: str
-    password: str
+    hashed_password: str
     email: Optional[EmailStr] = None
+    class Config:
+        orm_mode = True
 
 
 class UserLogin(BaseModel):
     username: str
-    password: str
+    hashed_password: str
 
 
-class USerOut(BaseModel):
+class UserOut(BaseModel):
     id: int
     username: str
     email: Optional[EmailStr]
