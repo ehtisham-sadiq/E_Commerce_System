@@ -1,5 +1,6 @@
 from typing import Annotated
-from databases import get_session, Session
 from fastapi import Depends
+from app.src.database import get_session, AsyncSession
 
-SessionDep = Annotated[Session, Depends(get_session)]
+# Dependency to use the session in routes
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
