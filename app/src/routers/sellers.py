@@ -1,44 +1,40 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from app.src.database import get_session
-from app.src.domain.seller import service
-from app.src.domain.seller.schemas import SellerOut, SellerCreate, SellerUpdate
-import logging
+from fastapi import APIRouter, HTTPException, Depends
+from app.src.domain.sellers.schemas import SellerCreate, SellerUpdate, SellerOut
+from app.src.domain.sellers.service import SellerService
+from app.src.dependencies import SessionDep
 
 router = APIRouter()
-logger = logging.getLogger(__name__)
 
-@router.post("/sellers/", response_model=SellerOut, status_code=status.HTTP_201_CREATED)
-async def create_seller(seller: SellerCreate, db: Session = Depends(get_session)):
-    try:
-        return await service.create_seller(db=db, seller=seller)
-    except Exception as e:
-        logger.error(f"Error creating seller: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+@router.post("/sellers", response_model=SellerOut, tags=["Sellers Management"])
+async def create_seller(seller: SellerCreate, db: SessionDep):
+    seller_service = SellerService(db)
+    return await seller_service.create_seller(seller)
 
-@router.get("/sellers/{seller_id}", response_model=SellerOut)
-async def read_seller(seller_id: int, db: Session = Depends(get_session)):
-    db_seller = await service.get_seller_by_id(db=db, seller_id=seller_id)
-    if db_seller is None:
-        logger.warning(f"Seller with ID {seller_id} not found.")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Seller not found")
-    return db_seller
+@router.get("/sellers", response_model=list[SellerOut], tags=["Sellers Management"])
+async def get_sellers(db: SessionDep):
+    seller_service = SellerService(db)
+    return await seller_service.get_sellers()
 
-@router.get("/sellers/", response_model=list[SellerOut])
-async def read_sellers(skip: int = 0, limit: int = 10, db: Session = Depends(get_session)):
-    return await service.get_sellers(db=db, skip=skip, limit=limit)
+@router.get("/sellers/{seller_id}", response_model=SellerOut, tags=["Sellers Management"])
+async def get_seller(seller_id: int, db: SessionDep):
+    seller_service = SellerService(db)
+    seller = await seller_service.get_seller_by_id(seller_id)
+    if seller is None:
+        raise HTTPException(status_code=404, detail="Seller not found")
+    return seller
 
-@router.put("/sellers/{seller_id}", response_model=SellerOut)
-async def update_seller(seller_id: int, seller: SellerUpdate, db: Session = Depends(get_session)):
-    db_seller = await service.update_seller(db=db, seller_id=seller_id, seller=seller)
-    if db_seller is None:
-        logger.warning(f"Attempt to update non-existent seller with ID {seller_id}.")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Seller not found")
-    return db_seller
+@router.put("/sellers/{seller_id}", response_model=SellerOut, tags=["Sellers Management"])
+async def update_seller(seller_id: int, seller: SellerUpdate, db: SessionDep):
+    seller_service = SellerService(db)
+    updated_seller = await seller_service.update_seller(seller_id, seller)
+    if updated_seller is None:
+        raise HTTPException(status_code=404, detail="Seller not found")
+    return updated_seller
 
-@router.delete("/sellers/{seller_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_seller(seller_id: int, db: Session = Depends(get_session)):
-    db_seller = await service.delete_seller(db=db, seller_id=seller_id)
-    if db_seller is None:
-        logger.warning(f"Attempt to delete non-existent seller with ID {seller_id}.")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Seller not found")
+@router.delete("/sellers/{seller_id}", tags=["Sellers Management"])
+async def delete_seller(seller_id: int, db: SessionDep):
+    seller_service = SellerService(db)
+    result = await seller_service.delete_seller(seller_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Seller not found")
+    return {"detail": "Seller deleted successfully"}
