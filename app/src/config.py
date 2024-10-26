@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from the .env file
 load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
