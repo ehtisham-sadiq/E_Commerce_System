@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from app.src.database import database, create_db
-from app.src.routers.buyers import router as buyers_router
 from app.src.routers.sellers import router as sellers_router
 
 app = FastAPI()
@@ -16,5 +15,3 @@ async def shutdown():
 
 # Include routers
 app.include_router(sellers_router)
-# Include the buyers router
-app.include_router(buyers_router)
