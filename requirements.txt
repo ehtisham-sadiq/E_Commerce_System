@@ -6,3 +6,10 @@ SQLAlchemy==2.0.28
 sqlmodel==0.0.22
 uvicorn==0.32.0
 websockets==13.1
+asyncpg==0.30.0
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+pydantic_core==2.23.4
+python-dotenv==1.0.1
+streamlit==1.39.0
+requests==2.32.3
