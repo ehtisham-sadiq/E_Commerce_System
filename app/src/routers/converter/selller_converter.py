@@ -1,6 +1,6 @@
 from typing import List
-from app.src.domain.seller.models import Seller
-from app.src.domain.seller.schemas import SellerOut
+from app.src.domain.sellers.models import Seller
+from app.src.domain.sellers.schemas import SellerOut
 from fastapi import HTTPException
 
 def convert(seller: Seller) -> SellerOut:

@@ -80,63 +80,11 @@ st.markdown("<h1 class='title'>E-Commerce System</h1>", unsafe_allow_html=True)
 st.markdown("<h2 class='subtitle'>Select a category to manage</h2>", unsafe_allow_html=True)
 
 # Sidebar for category selection
-categories = ["Authenticatin", "Buyer Management", "Car Inventory Management", "Seller Management", "Sales Management"]
+categories = ["Authentication", "Buyer Management", "Car Inventory Management", "Seller Management", "Sales Management"]
 selected_category = st.sidebar.selectbox("Categories", categories)
 
 
-if selected_category == "Authenticatin":
-    # Tab structure to switch between Registration and Login
-    tab1, tab2 = st.tabs(["Register", "Login"])
-
-    # Registration Form
-    with tab1:
-        st.header("User Registration")
-        username = st.text_input("Username (required)", key="reg_username")
-        password = st.text_input("Password (required)", type="password", key="reg_password")
-        email = st.text_input("Email (optional)", key="reg_email")
-        if not email:
-            email=None
-
-        if st.button("Register"):
-            # Check that required fields are filled
-            if username and password:
-                # Send POST request to FastAPI registration endpoint
-                try:
-                    response = user_register(username,password,email)
-                    if response.status_code == 200:
-                        data = response.json()
-                        st.success(f"✅ User {data} registered successfully!")
-                    else:
-                        st.error(f"❌ Registration failed: {response.json().get('detail', 'Unknown error')}")
-                except requests.exceptions.RequestException as e:
-                    st.error(f"Connection error: {e}")
-            else:
-                st.warning("Please fill out all required fields.")
-
-    # Login Form
-    with tab2:
-        st.header("User Login")
-        login_username = st.text_input("Username", key="login_username")
-        login_password = st.text_input("Password", type="password", key="login_password")
-
-        if st.button("Login"):
-            # Check that required fields are filled
-            if login_username and login_password:
-                # Send POST request to FastAPI login endpoint
-                try:
-                    response = user_login(login_username,login_password)
-                    if response.status_code == 200:
-                        data = response.json()
-                        st.success("✅ Login successful!")
-                        st.write(f"Welcome, {data['username']}!")
-                        st.write(f"JWT Token: {data['token']}")
-                    else:
-                        st.error(f"❌ Login failed: {response.json().get('detail', 'Unknown error')}")
-                except requests.exceptions.RequestException as e:
-                    st.error(f"Connection error: {e}")
-            else:
-                st.warning("Please enter both username and password.")
-elif selected_category == "Buyer Management":
+if selected_category == "Buyer Management":
     st.subheader("Buyer Management")
     menu = ["Add Buyer", "View Buyers", "Update Buyer", "Delete Buyer"]
     choice = st.selectbox("Select an option", menu)
@@ -191,6 +139,59 @@ elif selected_category == "Buyer Management":
             else:
                 st.error("❌ Error deleting buyer: " + result.json().get('detail', 'Unknown error'))
 
+elif selected_category == "Authentication":
+    # Tab structure to switch between Registration and Login
+    tab1, tab2 = st.tabs(["Register", "Login"])
+
+    # Registration Form
+    with tab1:
+        st.header("User Registration")
+        username = st.text_input("Username (required)", key="reg_username")
+        password = st.text_input("Password (required)", type="password", key="reg_password")
+        email = st.text_input("Email (optional)", key="reg_email")
+        if not email:
+            email=None
+
+        if st.button("Register"):
+            # Check that required fields are filled
+            if username and password:
+                # Send POST request to FastAPI registration endpoint
+                try:
+                    response = user_register(username,password,email)
+                    if response.status_code == 200:
+                        data = response.json()
+                        st.success(f"✅ User {data} registered successfully!")
+                    else:
+                        st.error(f"❌ Registration failed: {response.json().get('detail', 'Unknown error')}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Connection error: {e}")
+            else:
+                st.warning("Please fill out all required fields.")
+
+    # Login Form
+    with tab2:
+        st.header("User Login")
+        login_username = st.text_input("Username", key="login_username")
+        login_password = st.text_input("Password", type="password", key="login_password")
+
+        if st.button("Login"):
+            # Check that required fields are filled
+            if login_username and login_password:
+                # Send POST request to FastAPI login endpoint
+                try:
+                    response = user_login(login_username,login_password)
+                    if response.status_code == 200:
+                        data = response.json()
+                        st.success("✅ Login successful!")
+                        st.write(f"Welcome, {data['username']}!")
+                        st.write(f"JWT Token: {data['token']}")
+                    else:
+                        st.error(f"❌ Login failed: {response.json().get('detail', 'Unknown error')}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Connection error: {e}")
+            else:
+                st.warning("Please enter both username and password.")
+                
 elif selected_category == "Car Inventory Management":
     st.subheader("Car Inventory Management")
     # Place code for car inventory management here
