@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class SellerCreate(BaseModel):
     name: str
@@ -6,9 +7,9 @@ class SellerCreate(BaseModel):
     address: str
 
 class SellerUpdate(BaseModel):
-    name: str | None = None
-    contact_details: str | None = None
-    address: str | None = None
+    name: Optional[str] = None
+    contact_details: Optional[str] = None
+    address: Optional[str] = None
 
 class SellerOut(BaseModel):
     id: int

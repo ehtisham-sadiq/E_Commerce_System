@@ -3,7 +3,7 @@ from typing import Optional
 
 class UserCreate(BaseModel):
     username: str
-    hashed_password: str
+    password: str
     email: Optional[EmailStr] = None
     class Config:
         orm_mode = True
@@ -11,7 +11,7 @@ class UserCreate(BaseModel):
 
 class UserLogin(BaseModel):
     username: str
-    hashed_password: str
+    password: str
 
 
 class UserOut(BaseModel):

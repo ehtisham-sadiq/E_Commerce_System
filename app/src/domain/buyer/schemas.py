@@ -1,12 +1,13 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class BuyerCreate(BaseModel):
     name: str
     contact: str
 
 class BuyerUpdate(BaseModel):
-    name: str | None = None
-    contact: str | None = None
+    name: Optional[str] = None
+    contact: Optional[str] = None
 
 class BuyerOut(BaseModel):
     id: int

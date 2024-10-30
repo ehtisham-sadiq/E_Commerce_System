@@ -2,6 +2,7 @@ from .models import Seller
 from app.src.domain.sellers.schemas import SellerCreate, SellerUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from typing import Union
 
 class SellerService:
     def __init__(self, db: AsyncSession):
@@ -18,10 +19,10 @@ class SellerService:
         result = await self.db.execute(select(Seller))
         return result.scalars().all()
 
-    async def get_seller_by_id(self, seller_id: int) -> Seller | None:
+    async def get_seller_by_id(self, seller_id: int) -> Union[Seller,None]:
         return await self.db.get(Seller, seller_id)
 
-    async def update_seller(self, seller_id: int, seller_data: SellerUpdate) -> Seller | None:
+    async def update_seller(self, seller_id: int, seller_data: SellerUpdate) -> Union[Seller,None]:
         seller = await self.get_seller_by_id(seller_id)
         if seller:
             for key, value in seller_data.dict(exclude_unset=True).items():

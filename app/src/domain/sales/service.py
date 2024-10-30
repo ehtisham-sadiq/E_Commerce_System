@@ -2,6 +2,7 @@ from .models import Sale
 from app.src.domain.sales.schemas import SaleCreate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from typing import Union
 
 class SaleService:
     def __init__(self, db: AsyncSession):
@@ -24,5 +25,5 @@ class SaleService:
         result = await self.db.execute(select(Sale))
         return result.scalars().all()
 
-    async def get_sale_by_id(self, sale_id: int) -> Sale | None:
+    async def get_sale_by_id(self, sale_id: int) -> Union[Sale,None]:
         return await self.db.get(Sale, sale_id)

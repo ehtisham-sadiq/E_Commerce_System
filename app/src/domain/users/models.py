@@ -1,6 +1,6 @@
 from pydantic import EmailStr
 from sqlalchemy import Column, Integer, String
-from app.src.database import Base
+from ...database import Base
 
 
 class User(Base):
@@ -8,5 +8,5 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username= Column(String, index=True)
-    hashed_password= Column(String)
+    password= Column(String)
     email= Column(String,default=None)
